@@ -44,7 +44,7 @@ The `Register_File.circ` implements a 32-register file where each register is 32
 - **Dual-read, single-write** architecture  
 - Controlled by `RegWrite` and `CLK` signals for synchronous write  
 - Addressed using 5-bit `Read_Reg_2`, `Read_Reg_2`, and `WriteReg` inputs
-- Input to register through the 32-bit WriteData port 
+- Input to register through the 32-bit `WriteData` port 
 - Outputs `Output_1` and `Output_2` for parallel register access
 
 📌 Used to store and retrieve data during instruction execution in the CPU.
