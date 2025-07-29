@@ -52,7 +52,7 @@ The `Register_File.circ` implements a 32-register file where each register is 32
 
 ---
 
-### 📜 Instruction Memory
+### 📜 nstruction Memory
 
 The `Instruction_Memory.circ` stores the CPU’s instructions in a read-only memory module.
 
@@ -61,8 +61,10 @@ The `Instruction_Memory.circ` stores the CPU’s instructions in a read-only mem
 - Addressed by the 32-bit Program Counter input  
 - Supports sequential and jump instruction fetching  
 
-⚠️ Simulation Limitation
-Due to Logisim's internal constraints, the instruction memory and program counter simulation is limited to 128 MB of addressable space instead of the full 4 GB that a real 32-bit MIPS CPU would support. This is because Logisim can only handle up to 24 input pins for addressing, limiting the maximum addressable memory in this project.
+⚠️ **Simulation Limitation**
+
+Due to Logisim's internal constraints, the instruction memory and program counter simulation is limited to 128 MB of addressable space instead of the full 4 GB supported by a true 32-bit MIPS CPU. This is because Logisim supports a maximum of 26 input pins for the address bus in these components, which limits the addressable memory size.
+
 ---
 
 ### 🔄 Program Counter
