@@ -114,6 +114,6 @@ If you use this in your own project or class, consider crediting the channel!
 ## 🙌 Contributions / Feedback
 
 Feedback, corrections, or improvements are welcome.  
-Feel free to open an issue or pull request — or just say hi on Reddit or YouTube.
+Feel free to open an issue or pull request — or just say hi on YouTube.
 
 ---
