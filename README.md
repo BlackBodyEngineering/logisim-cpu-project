@@ -61,6 +61,8 @@ The `Instruction_Memory.circ` stores the CPU’s instructions in a read-only mem
 - Addressed by the 32-bit Program Counter input  
 - Supports sequential and jump instruction fetching  
 
+⚠️ Simulation Limitation
+Due to Logisim's internal constraints, the instruction memory and program counter simulation is limited to 128 MB of addressable space instead of the full 4 GB that a real 32-bit MIPS CPU would support. This is because Logisim can only handle up to 24 input pins for addressing, limiting the maximum addressable memory in this project.
 ---
 
 ### 🔄 Program Counter
