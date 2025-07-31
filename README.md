@@ -12,11 +12,13 @@ This project is modular and grows with each episode. Current components:
 
 ```
 circuits/
-├── ALU.circ              # 32-bit ALU (add, subtract, AND, OR, set-on-less-than)
-├── Register_File.circ    # 32-register file with 32-bit registers, dual-read, single-write
+├── ALU.circ                 # 32-bit ALU (add, subtract, AND, OR, set-on-less-than)
+├── Register_File.circ       # 32-register file with 32-bit registers, dual-read, single-write
 ├── Instruction_Memory.circ  # Read-only memory storing instructions
 ├── Program_Counter.circ     # 32-bit program counter for instruction sequencing
+├── Data_Memory.circ         # 32-bit word-addressable read/write memory
 ```
+
 ---
 
 ### ⚙️ ALU Operation Codes
@@ -78,6 +80,59 @@ The `Program_Counter.circ` is a 32-bit register that keeps track of the current 
 
 ---
 
+### 🧮 Data Memory
+
+The `Data_Memory.circ` provides word-addressable memory for reading and writing data during program execution.
+
+**Key Features:**
+- 32-bit wide address, read, and write data ports  
+- Synchronous write using the `MemWrite` control signal  
+- Asynchronous read from the `ReadData` output  
+- Used for load/store instructions like `LW` and `SW` in MIPS
+
+📌 Crucial for memory-based operations and simulating RAM behavior.
+
+⚠️ **Simulation Limitation**
+
+Due to Logisim's internal constraints, the Data Memory is limited to a maximum of 24 input pins for the address bus in these components, which limits the addressable memory size.
+
+---
+
+#### 🧪 Simulating `LW` and `SW` Instructions
+
+**Inputs:**
+- `Address` (32-bit): The memory address to read/write  
+- `WriteData` (32-bit): The value to write (for `SW`)  
+- `MemWrite` (1-bit): Enable writing on positive clock edge  
+- `CLK`: Clock input (only needed for `SW`)  
+
+**Output:**
+- `ReadData` (32-bit): Value read from the address (for `LW`)
+
+---
+
+✅ **`SW` (Store Word)**  
+*Store the value in a register to memory.*
+
+**Steps:**
+1. Set the `Address` input (e.g., 0x00000008)  
+2. Set the `WriteData` input (e.g., 0x000000FF)  
+3. Set `MemWrite = 1`  
+4. Apply a rising edge to `CLK`  
+5. Set `MemWrite = 0` after write (recommended)
+
+✅ **`LW` (Load Word)**  
+*Load a 32-bit value from memory into a register.*
+
+**Steps:**
+1. Set the `Address` input (e.g., 0x00000008)  
+2. Ensure `MemWrite = 0`  
+3. The `ReadData` output will show the stored value from that address
+
+> 🧠 **Tip:** No clock is required to read from memory (`LW`).
+
+---
+
 ## 🚀 How to Use
 
 1. Download [Logisim Evolution](https://github.com/logisim-evolution/logisim-evolution)  
@@ -96,7 +151,7 @@ This project is part of my educational series on YouTube:
 Each video walks through the design and logic behind each component:
 
 ```
-Full Adder → CLA → ALU → Register File → Instruction Memory → Program Counter → Control Logic → CPU
+Full Adder → CLA → ALU → Register File → Instruction Memory → Program Counter → Data Memory → Control Logic → CPU
 ```
 
 - Clear, step-by-step logic explanations  
