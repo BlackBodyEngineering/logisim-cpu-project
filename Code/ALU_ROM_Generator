@@ -1,0 +1,81 @@
+"""
+Generate a Logisim ROM image (v2.0 raw) for the ALU-control logic.
+
+Address map (bit 7 = MSB):
+    addr[7]  ← Op1
+    addr[6]  ← Op0
+    addr[5]  ← F5
+    addr[4]  ← F4
+    addr[3]  ← F3
+    addr[2]  ← F2
+    addr[1]  ← F1
+    addr[0]  ← F0
+
+Data (4 bits) encodings:
+    0010 → 0x2   # add
+    0110 → 0x6   # subtract
+    0000 → 0x0   # AND  (also default when unspecified)
+    0001 → 0x1   # OR
+    0111 → 0x7   # set-on-less-than
+"""
+
+OUTPUT_FILE = "ALUControl.rom"
+
+def alu_control_code(op1, op0, f):
+    """
+    Return the 4-bit ALU-control value for the given inputs.
+    Priority (highest → lowest):
+      1. ALUOp = 11  → 0000
+      2. Op0  = 1    → 0110
+      3. ALUOp = 00  → 0010
+      4. ALUOp = 10  → function decode
+      5. default     → 0000
+    """
+    # 1. ALUOp == 11
+    if op1 == 1 and op0 == 1:
+        return 0x0                              # 0000
+
+    # 2. Any other time Op0 == 1  →  0110
+    if op0 == 1:
+        return 0x6                              # 0110
+
+    # 3. ALUOp == 00  →  0010
+    if op1 == 0:
+        return 0x2                              # 0010
+
+    # 4. ALUOp == 10  →  decode selected funct codes
+    f3_0 = f & 0xF
+    match f3_0:
+        case 0x0:  return 0x2                  # add
+        case 0x2:  return 0x6                  # sub
+        case 0x4:  return 0x0                  # AND
+        case 0x5:  return 0x1                  # OR
+        case 0xA:  return 0x7                  # SLT
+    # 5. default
+    return 0x0
+
+
+def build_rom_image():
+    """Generate the full 256-nibble list for the ROM."""
+    image = []
+    for addr in range(256):                      # 8-bit address space
+        op1 = (addr >> 7) & 1                    # shifts Position 7 (= Op1) to the right by 7
+        op0 = (addr >> 6) & 1                   # shifts Position 6 (= Op0) to the right by 6
+        funct = addr & 0x3F                     # lower 6 bits (Masked)
+        image.append(alu_control_code(op1, op0, funct))
+    return image
+
+
+def write_v20_raw(filename, nibbles):
+    """Write the image in Logisim’s v2.0 raw format, 16 values per line."""
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write("v2.0 raw\n")
+        for i in range(0, len(nibbles), 16):
+            line = " ".join(f"{n:X}" for n in nibbles[i:i+16])
+            f.write(line + "\n")
+    print(f"Wrote {len(nibbles)} entries to {filename}")
+
+
+if __name__ == "__main__":
+    rom_data = build_rom_image()
+    write_v20_raw(OUTPUT_FILE, rom_data)
