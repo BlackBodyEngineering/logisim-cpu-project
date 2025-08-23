@@ -20,7 +20,7 @@ circuits/
 ├── Data_Memory.circ         # 32-bit word-addressable read/write memory
 ├── ALU_Control_ROM.circ     # 8-bit-address ROM that outputs the 4-bit ALU control code
 ├── Control_Unit.circ        # Main control logic (generates CPU control signals)
-├── CPU.circ                  # Top-level integration of all modules into a 32-bit CPU
+├── mips32B_NoJump.circ      # Top-level integration of all modules into a 32-bit CPU
 ```
 
 > **Source code & scripts**
